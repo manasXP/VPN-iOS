@@ -1,0 +1,16 @@
+PODS:
+  - TPKeyboardAvoiding (1.3.4)
+
+DEPENDENCIES:
+  - TPKeyboardAvoiding
+
+SPEC REPOS:
+  trunk:
+    - TPKeyboardAvoiding
+
+SPEC CHECKSUMS:
+  TPKeyboardAvoiding: 7c2187e2338052b2c5be4a8052f297fdb124e261
+
+PODFILE CHECKSUM: 450d13c4549ae3b994697c3a34be64e114a28fc0
+
+COCOAPODS: 1.10.0.beta.2
