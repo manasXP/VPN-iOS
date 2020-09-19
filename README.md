@@ -1,6 +1,22 @@
 # VPN-iOS
 VPN app for redirecting DSN traffic in iOS devices
+Based on https://github.com/gordinmitya/SimpleVPN
 
+# Changes made to SimpleVPN
+
+1. Created `Constants.swift` file with predefined values of our VPN server (address, username, password).
+2. Changed `VPNManager` so it can support DNS changes:
+```
+let evaluationRule = NEEvaluateConnectionRule(matchDomains: Domains.tlds,
+                                              andAction: NEEvaluateConnectionRuleAction.connectIfNeeded)
+evaluationRule.useDNSServers = [dns1, dns2]
+let onDemandRule = NEOnDemandRuleEvaluateConnection()
+onDemandRule.connectionRules = [evaluationRule]
+onDemandRule.interfaceTypeMatch = NEOnDemandRuleInterfaceType.any
+manager.onDemandRules = [onDemandRule, NEOnDemandRuleConnect()]
+```
+3. Updated UI (added custom DNS fields and fixed a couple of UX bugs).
+4. Removed some unneeded UI stuff.
 
 # IKEv2 VPN Server deployment process
 
