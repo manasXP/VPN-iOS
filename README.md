@@ -5,6 +5,7 @@ VPN app for redirecting DSN traffic in iOS devices
 # IKEv2 VPN Server deployment process
 
 Prerequisites: Ubuntu 18.04 LTS, registered domain name.
+
 Make sure that you have you domain name DNS A record pointing to your server's IP address. Check that with https://mxtoolbox.com/SuperTool.aspx or anything like that
 
 ## Step 1
