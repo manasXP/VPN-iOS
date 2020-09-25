@@ -6,3 +6,8 @@ target 'SimpleVpn' do
   use_frameworks!
   pod 'TPKeyboardAvoiding'
 end
+
+target 'Tunnel' do
+  use_frameworks!
+  pod 'CocoaLumberjack'
+end

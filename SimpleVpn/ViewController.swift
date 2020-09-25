@@ -1,126 +1,135 @@
-//
-//  ViewController.swift
-//  SimpleVpn
-//
-//  Created by Dmitry Gordin on 12/22/16.
-//  Copyright © 2016 Dmitry Gordin. All rights reserved.
-//
-
 import UIKit
 import NetworkExtension
 
 class ViewController: UIViewController, UITextFieldDelegate {
-    
-    @IBOutlet weak var serverText: UITextField!
-    @IBOutlet weak var accountText: UITextField!
-    @IBOutlet weak var passwordText: UITextField!
-    @IBOutlet weak var pskSwitch: UISwitch!
-    @IBOutlet weak var pskText: UITextField!
-    @IBOutlet var inputFields: [UITextField]!
-    @IBOutlet weak var ondemandSwitch: UISwitch!
-    @IBOutlet weak var connectButton: CustomButton!
-    @IBOutlet private var enableDNSSwitch: UISwitch!
-    @IBOutlet private var firstDNSTextField: UITextField!
-    @IBOutlet private var secondDNSTextField: UITextField!
+
+    @IBOutlet weak var vpnSwitch: UISwitch!
+    @IBOutlet weak var dohSwitch: UISwitch!
+    @IBOutlet weak var statusLabel: UILabel!
+
+    private let dnsManager = DNSManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        for field in inputFields {
-            field.delegate = self
-        }
-        
         vpnStateChanged(status: VPNManager.shared.status)
         VPNManager.shared.statusEvent.attach(self, ViewController.vpnStateChanged)
         
-        let config = Configuration.loadFromDefaults()
-        serverText.text = config.server
-        accountText.text = config.account
-        passwordText.text = config.password
-        ondemandSwitch.isOn = config.onDemand
-        pskSwitch.isOn = config.pskEnabled
-        pskText.text = config.psk
-        pskText.isEnabled = config.pskEnabled
-        enableDNSSwitch.isOn = config.isDNSEnabled
-        firstDNSTextField.isEnabled = config.isDNSEnabled
-        secondDNSTextField.isEnabled = config.isDNSEnabled
-        firstDNSTextField.text = config.firstDNSEndpoint
-        secondDNSTextField.text = config.secondDNSEndpoint
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if (textField === serverText) {
-            accountText.becomeFirstResponder()
-        } else if (textField === accountText) {
-            passwordText.becomeFirstResponder()
-        } else if (textField === pskText && pskSwitch.isOn) {
-            passwordText.becomeFirstResponder()
-        } else if textField === passwordText && enableDNSSwitch.isOn {
-            firstDNSTextField.becomeFirstResponder()
-        } else if textField === firstDNSTextField && enableDNSSwitch.isOn {
-            secondDNSTextField.becomeFirstResponder()
-        } else if textField === secondDNSTextField && enableDNSSwitch.isOn {
-            connectClick()
-        } else {
-            connectClick()
+        dnsManager.statusEvent.attach(self, ViewController.dohStateChanged)
+        dnsManager.startStatusMonitors()
+        dnsManager.getStatus { [weak self] result in
+            switch result {
+            case .failure(_):
+                self?.dohSwitch.isOn = false
+            case .success(let status):
+                self?.dohStateChanged(status: status)
+            }
         }
-        return true
     }
     
     func vpnStateChanged(status: NEVPNStatus) {
-        changeControlEnabled(state: VPNManager.shared.isDisconnected)
+        let isDisconnected = VPNManager.shared.isDisconnected
+        dohSwitch.isEnabled = isDisconnected
+        var statusText = ""
         switch status {
         case .disconnected, .invalid, .reasserting:
-            connectButton.setTitle("Connect", for: .normal)
+            statusText = "Disconnected from VPN"
+            vpnSwitch.isOn = false
+            vpnSwitch.isEnabled = true
         case .connected:
-            connectButton.setTitle("Disconnect", for: .normal)
+            statusText = "Connected to VPN"
+            vpnSwitch.isOn = true
+            vpnSwitch.isEnabled = true
         case .connecting:
-            connectButton.setTitle("Connecting...", for: .normal)
+            statusText = "Connecting to VPN..."
+            vpnSwitch.isOn = true
+            vpnSwitch.isEnabled = false
         case .disconnecting:
-            connectButton.setTitle("Disconnecting...", for: .normal)
+            statusText = "Disconnecting from VPN..."
+            vpnSwitch.isOn = false
+            vpnSwitch.isEnabled = false
         @unknown default:
-            connectButton.setTitle("Connect", for: .normal)
+            statusText = "Unknown status"
         }
+        statusLabel.text = statusText
     }
     
-    func changeControlEnabled(state: Bool) {
-        for i in inputFields {
-            i.isEnabled = state
+    func dohStateChanged(status: NEVPNStatus) {
+        var statusText = ""
+        switch status {
+        case .disconnected, .invalid, .reasserting:
+            statusText = "Disconnected from DoH"
+            dohSwitch.isOn = false
+            dohSwitch.isEnabled = true
+            vpnSwitch.isEnabled = true
+        case .connected:
+            statusText = "Connected to DoH"
+            dohSwitch.isOn = true
+            dohSwitch.isEnabled = true
+            vpnSwitch.isEnabled = false
+        case .connecting:
+            statusText = "Connecting to DoH..."
+            dohSwitch.isOn = true
+            dohSwitch.isEnabled = false
+            vpnSwitch.isEnabled = false
+        case .disconnecting:
+            statusText = "Disconnecting from DoH..."
+            dohSwitch.isOn = false
+            dohSwitch.isEnabled = false
+            vpnSwitch.isEnabled = false
+        @unknown default:
+            statusText = "Unknown status"
         }
-        pskSwitch.isEnabled = state
-        pskText.isEnabled = pskSwitch.isOn
-        ondemandSwitch.isEnabled = state
-        enableDNSSwitch.isEnabled = state
-        firstDNSTextField.isEnabled = enableDNSSwitch.isOn
-        secondDNSTextField.isEnabled = enableDNSSwitch.isOn
+        statusLabel.text = statusText
     }
     
-    @IBAction func pskSwitchChanged(_ sender: UISwitch) {
-        pskText.isEnabled = sender.isOn
+    @IBAction func vpnSwitchChanged(_ sender: UISwitch) {
+        dohSwitch.isEnabled = false
+        vpnSwitch.isEnabled = false
+        connectVPN()
     }
     
-    @IBAction func dnsSwitchChanged(_ sender: UISwitch) {
-        firstDNSTextField.isEnabled = sender.isOn
-        secondDNSTextField.isEnabled = sender.isOn
+    @IBAction func dohSwitchChanged(_ sender: UISwitch) {
+        dohSwitch.isEnabled = false
+        vpnSwitch.isEnabled = false
+        connectDoH()
     }
     
-    @IBAction func connectClick() {
-        if (VPNManager.shared.isDisconnected) {
-            let config = Configuration(
-                server: serverText.text ?? "",
-                account: accountText.text ?? "",
-                password: passwordText.text ?? "",
-                onDemand: ondemandSwitch.isOn,
-                psk: pskSwitch.isOn ? pskText.text : nil,
-                firstDNSEndpoint: enableDNSSwitch.isOn ? firstDNSTextField.text : nil,
-                secondDNSEndpoint: enableDNSSwitch.isOn ? secondDNSTextField.text : nil)
-            VPNManager.shared.connectIKEv2(config: config) { error in
-                let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+    private func connectDoH() {
+        if dnsManager.isDisconnected {
+            dnsManager.requestPermission { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.dnsManager.startExt(completion: { [weak self] result in
+                        switch result {
+                        case .success(_): break
+                        case .failure(let error):
+                            self?.showErrorAlert(with: error.localizedDescription)
+                        }
+                    })
+                case .failure(let error):
+                    self?.showErrorAlert(with: error.localizedDescription)
+                }
             }
-            config.saveToDefaults()
+        } else {
+            dnsManager.stopExt()
+        }
+    }
+    
+    private func connectVPN() {
+        if VPNManager.shared.isDisconnected {
+            VPNManager.shared.connectIKEv2 { [weak self] error in
+                self?.showErrorAlert(with: error)
+            }
         } else {
             VPNManager.shared.disconnect()
         }
     }
+    
+    private func showErrorAlert(with errorDescription: String) {
+        let alert = UIAlertController(title: "Error", message: errorDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
 }

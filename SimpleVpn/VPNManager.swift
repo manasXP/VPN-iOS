@@ -1,15 +1,9 @@
-//
-//  VPNManager.swift
-//  SimpleVpn
-//
-//  Created by Dmitry Gordin on 12/22/16.
-//  Copyright © 2016 Dmitry Gordin. All rights reserved.
-//
-
 import Foundation
 import NetworkExtension
 
 final class VPNManager: NSObject {
+    private let passwordKey = "VPN_password"
+    
     static let shared: VPNManager = {
         let instance = VPNManager()
         instance.manager.localizedDescription = Bundle.main.infoDictionary![kCFBundleNameKey as String] as? String
@@ -19,11 +13,9 @@ final class VPNManager: NSObject {
 
     let manager: NEVPNManager = { NEVPNManager.shared() }()
     public var isDisconnected: Bool {
-        get {
-            return (status == .disconnected)
-                || (status == .reasserting)
-                || (status == .invalid)
-        }
+        return (status == .disconnected)
+            || (status == .reasserting)
+            || (status == .invalid)
     }
     public var status: NEVPNStatus { get { return manager.connection.status } }
     public let statusEvent = Subject<NEVPNStatus>()
@@ -73,19 +65,17 @@ final class VPNManager: NSObject {
         }
     }
     
-    public func connectIKEv2(config: Configuration, onError: @escaping (String)->Void) {
+    public func connectIKEv2(onError: @escaping (String)->Void) {
+        KeychainWrapper.standard.set(Constants.vpnPassword, forKey: passwordKey)
+
+        
         let p = NEVPNProtocolIKEv2()
         
-        if config.pskEnabled {
-            p.authenticationMethod = NEVPNIKEAuthenticationMethod.sharedSecret
-        } else {
-            p.authenticationMethod = NEVPNIKEAuthenticationMethod.none
-        }
-        p.serverAddress = config.server
+        p.authenticationMethod = NEVPNIKEAuthenticationMethod.none
+        p.serverAddress = Constants.serverAddress
         p.disconnectOnSleep = false
-        p.username = config.account
-        p.passwordReference = config.getPasswordRef()
-        p.sharedSecretReference = config.getPSKRef()
+        p.username = Constants.vpnUser
+        p.passwordReference = KeychainWrapper.standard.dataRef(forKey: passwordKey)
         p.deadPeerDetectionRate = .medium
         p.disableMOBIKE = false
         p.disableRedirect = false
@@ -103,25 +93,11 @@ final class VPNManager: NSObject {
         p.ikeSecurityAssociationParameters.diffieHellmanGroup = .group20
         p.ikeSecurityAssociationParameters.lifetimeMinutes = 1440
         
-        if config.isDNSEnabled, let dns1 = config.firstDNSEndpoint, let dns2 = config.secondDNSEndpoint {
-            let evaluationRule = NEEvaluateConnectionRule(matchDomains: Domains.tlds,
-                                                          andAction: NEEvaluateConnectionRuleAction.connectIfNeeded)
-            evaluationRule.useDNSServers = [dns1, dns2]
-            let onDemandRule = NEOnDemandRuleEvaluateConnection()
-            onDemandRule.connectionRules = [evaluationRule]
-            onDemandRule.interfaceTypeMatch = NEOnDemandRuleInterfaceType.any
-            manager.onDemandRules = [onDemandRule, NEOnDemandRuleConnect()]
-        }
-        
         // two lines bellow may depend of your server configuration
-        p.remoteIdentifier = config.server
-        p.localIdentifier = config.account
+        p.remoteIdentifier = Constants.serverAddress
+        p.localIdentifier = Constants.vpnUser
         loadProfile { _ in
             self.manager.protocolConfiguration = p
-            if config.onDemand && config.isDNSEnabled == false {
-                self.manager.onDemandRules = [NEOnDemandRuleConnect()]
-                self.manager.isOnDemandEnabled = true
-            }
             self.manager.isEnabled = true
             self.saveProfile { success in
                 if !success {
