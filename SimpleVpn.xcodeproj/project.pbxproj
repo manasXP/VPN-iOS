@@ -22,7 +22,6 @@
 		8104096B251BA18D00F75D6C /* Migrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8104096A251BA18D00F75D6C /* Migrator.m */; };
 		8104096C251BA18D00F75D6C /* Migrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8104096A251BA18D00F75D6C /* Migrator.m */; };
 		81040976251BA2EF00F75D6C /* DNSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81040973251BA2EF00F75D6C /* DNSManager.swift */; };
-		81040977251BA2EF00F75D6C /* DNSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81040973251BA2EF00F75D6C /* DNSManager.swift */; };
 		81040978251BA2EF00F75D6C /* NetTester.m in Sources */ = {isa = PBXBuildFile; fileRef = 81040975251BA2EF00F75D6C /* NetTester.m */; };
 		81040979251BA2EF00F75D6C /* NetTester.m in Sources */ = {isa = PBXBuildFile; fileRef = 81040975251BA2EF00F75D6C /* NetTester.m */; };
 		8109E8902517667E001C04F6 /* Dnscryptproxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8109E88F2517667E001C04F6 /* Dnscryptproxy.framework */; };
@@ -426,7 +425,6 @@
 			files = (
 				810B0C6C251E10E1002105AC /* DNSConstants.m in Sources */,
 				81040979251BA2EF00F75D6C /* NetTester.m in Sources */,
-				81040977251BA2EF00F75D6C /* DNSManager.swift in Sources */,
 				8109E8ED25176A59001C04F6 /* DNSCryptThread.m in Sources */,
 				8109E8EE25176A59001C04F6 /* Reachability.m in Sources */,
 				8104096C251BA18D00F75D6C /* Migrator.m in Sources */,
@@ -599,7 +597,7 @@
 					"$(inherited)",
 					"-framework",
 					"\"TPKeyboardAvoiding\"",
-					"-Objc",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -632,7 +630,7 @@
 					"$(inherited)",
 					"-framework",
 					"\"TPKeyboardAvoiding\"",
-					"-Objc",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -662,11 +660,11 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Tunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				OTHER_LDFLAGS = "-Objc";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest.Tunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "VPNTest Tunnel";
@@ -698,10 +696,10 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Tunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_FAST_MATH = YES;
-				OTHER_LDFLAGS = "-Objc";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest.Tunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "VPNTest Tunnel";

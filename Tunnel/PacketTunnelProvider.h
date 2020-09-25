@@ -4,8 +4,8 @@
 
 @interface PacketTunnelProvider : NEPacketTunnelProvider
 
-@property (nonatomic, copy, null_resettable) DNSCryptThread *dns;
-@property (nonatomic, copy, null_resettable) Reachability *reach;
-@property (nonatomic, copy, null_resettable) NSDate *lastForcedResolversCheck;
+@property (nonatomic, strong) DNSCryptThread *dns;
+@property (nonatomic, strong) Reachability *reach;
+@property (nonatomic, strong) NSDate *lastForcedResolversCheck;
 
 @end

@@ -82,16 +82,20 @@
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "0"
+         BundleIdentifier = "ru.wearemad.vpntest"
+         RemotePath = "/var/containers/Bundle/Application/600532E4-15F2-4980-8785-D5C318299FCA/SimpleVpn.app">
+      </RemoteRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4DB75EFE1E0C2CBE00C37E7F"
-            BuildableName = "SimpleVpn.app"
-            BlueprintName = "SimpleVpn"
+            BlueprintIdentifier = "8109E8D925176A24001C04F6"
+            BuildableName = "Tunnel.appex"
+            BlueprintName = "Tunnel"
             ReferencedContainer = "container:SimpleVpn.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

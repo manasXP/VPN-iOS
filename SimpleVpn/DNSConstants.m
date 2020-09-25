@@ -5,6 +5,6 @@
 @implementation DNSConstants
 
 NSString *const appGroup = @"group.ru.wearemad.vpntest";
-NSString *const serverStamp = @"AQcAAAAAAAAAEjk0LjI0NS4xMDkuMTIwOjQ0MyCrDf9vn_METYECRHUnwQj_T4R1wt1VtGZR2H5il06iVx8yLmRuc2NyeXB0LWNlcnQudnBuLndlYXJlbWFkLnJ1";
+NSString *const serverStamp = @"AQcAAAAAAAAAEjk0LjI0NS4xMDkuMTIwOjQ0MyAu1d7NXpwmsYmLDL9hwrYaLSpbYbOxdHOw_UMrDOhNtRkyLmRuc2NyeXB0LWNlcnQuZG5zc2VydmVy";
 
 @end

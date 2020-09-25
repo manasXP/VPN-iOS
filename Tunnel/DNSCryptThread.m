@@ -1,9 +1,9 @@
 #import "DNSCryptThread.h"
-@import CocoaLumberjack;
+//@import CocoaLumberjack;
 
 NS_ASSUME_NONNULL_BEGIN
 
-static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+//static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 NSString *const kDNSCryptProxyReady = @"DNSCryptProxyReady";
 
@@ -12,79 +12,75 @@ NSString *const kDNSCryptProxyReady = @"DNSCryptProxyReady";
 
 @implementation DNSCryptThread
 - (instancetype)init {
-    return [self initWithArguments:nil];
+    return [self initWithArgument:nil];
 }
 
-- (instancetype)initWithArguments:(nullable NSArray<NSString *> *)arguments {
+- (instancetype)initWithArgument:(nullable NSString *)argument {
     self = [super init];
     if (!self)
         return nil;
     
-    _dnsApp = DnscryptproxyMain(arguments[0]);
+    _dnsApp = DnscryptproxyMain(argument);
     
     self.name = @"DNSCrypt";
-    [DDLog addLogger:[DDOSLogger sharedInstance]]; // Uses os_log
+//    [DDLog addLogger:[DDOSLogger sharedInstance]]; // Uses os_log
 
     return self;
 }
 
 - (void)main {
-    [_dnsApp run:self];
+    [self.dnsApp run:self];
 }
 
 - (void) proxyReady {
     [[NSNotificationCenter defaultCenter] postNotificationName:kDNSCryptProxyReady object:self];
 }
 
-- (DnscryptproxyApp *)dnsApp {
-    return _dnsApp;
-}
-
 - (void)closeIdleConnections {
-    [_dnsApp closeIdleConnections];
+    [self.dnsApp closeIdleConnections];
 }
 
 - (void)refreshServersInfo {
-    [_dnsApp refreshServersInfo];
+    [self.dnsApp refreshServersInfo];
 }
 
 - (void)stopApp {
-    [_dnsApp stop:nil];
+    [self.dnsApp stop:nil];
 }
 
 - (void)logDebug:(NSString *)str {
-    DDLogDebug(@"%@: %@", self.name, str);
-    [_dnsApp logDebug:str];
+//    DDLogDebug(@"%@: %@", self.name, str);
+    [self.dnsApp logDebug:str];
 }
 
 - (void)logInfo:(NSString *)str {
-    DDLogInfo(@"%@: %@", self.name, str);
-    [_dnsApp logInfo:str];
+//    DDLogInfo(@"%@: %@", self.name, str);
+    [self.dnsApp logInfo:str];
 }
 
 - (void)logNotice:(NSString *)str {
-    DDLogInfo(@"%@: %@", self.name, str);
-    [_dnsApp logNotice:str];
+//    DDLogInfo(@"%@: %@", self.name, str);
+    [self.dnsApp logNotice:str];
 }
 
 - (void)logWarn:(NSString *)str {
-    DDLogWarn(@"%@: %@", self.name, str);
-    [_dnsApp logWarn:str];
+//    DDLogWarn(@"%@: %@", self.name, str);
+    [self.dnsApp logWarn:str];
 }
 
 - (void)logError:(NSString *)str {
-    DDLogError(@"%@: %@", self.name, str);
-    [_dnsApp logError:str];
+//    DDLogError(@"%@: %@", self.name, str);
+    [self.dnsApp logError:str];
 }
 
 - (void)logCritical:(NSString *)str {
-    DDLogError(@"%@: %@", self.name, str);
-    [_dnsApp logCritical:str];
+//    DDLogError(@"%@: %@", self.name, str);
+    [self.dnsApp logCritical:str];
 }
 
 - (void)logFatal:(NSString *)str {
-    DDLogError(@"%@: %@", self.name, str);
-    [_dnsApp logFatal:str];
+//    DDLogError(@"%@: %@", self.name, str);
+    [self.dnsApp logFatal:str];
 }
 @end
 

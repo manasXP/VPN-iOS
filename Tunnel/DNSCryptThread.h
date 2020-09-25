@@ -7,7 +7,7 @@ extern NSString *const kDNSCryptProxyReady;
 
 NS_SWIFT_NAME(DNSCryptThread)
 @interface DNSCryptThread : NSThread <DnscryptproxyCloakCallback>
-- (instancetype)initWithArguments:(nullable NSArray<NSString *> *)arguments NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithArgument:(nullable NSString *)argument NS_DESIGNATED_INITIALIZER;
 - (void)proxyReady;
 
 - (void)stopApp;
@@ -22,7 +22,7 @@ NS_SWIFT_NAME(DNSCryptThread)
 - (void)logCritical:(NSString *)str;
 - (void)logFatal:(NSString *)str;
 
-@property (nonatomic, copy, null_resettable) DnscryptproxyApp *dnsApp;
+@property (nonatomic, strong) DnscryptproxyApp *dnsApp;
 
 @end
 

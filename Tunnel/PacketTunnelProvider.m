@@ -5,14 +5,6 @@
 
 @implementation PacketTunnelProvider
 
-- (DNSCryptThread *)dns {
-    return _dns;
-}
-
-- (Reachability *)reach {
-    return _reach;
-}
-
 - (NSUserDefaults *)sharedDefs {
     return [[NSUserDefaults alloc] initWithSuiteName:appGroup];
 }
@@ -21,52 +13,45 @@
     return [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroup];
 }
 
-- (NSDate *)lastForcedResolversCheck {
-    return _lastForcedResolversCheck;
-}
-
 - (void)preflightCheck {
     [Migrator preflightCheck];
     [Migrator resetLockPermissions];
 }
 
 - (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler {
-    [self preflightCheck];
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
+//    [self preflightCheck];
     NSURL *fileManagerURL = [self sharedDir];
     
     NSURL *configFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/dnscrypt.toml"];
     
     NSURL *logFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/dns.log"];
-    if([fileManager fileExistsAtPath:[logFile path]]) {
-        [fileManager removeItemAtPath:[logFile path] error:nil];
+    if([[NSFileManager defaultManager] fileExistsAtPath:[logFile path]]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[logFile path] error:nil];
     }
     
     NSURL *nxLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/nx.log"];
-    if([fileManager fileExistsAtPath:[nxLogFile path]]) {
-        [fileManager removeItemAtPath:[nxLogFile path] error:nil];
+    if([[NSFileManager defaultManager] fileExistsAtPath:[nxLogFile path]]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[nxLogFile path] error:nil];
     }
     
     NSURL *queryLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/query.log"];
-    if([fileManager fileExistsAtPath:[queryLogFile path]]) {
-        [fileManager removeItemAtPath:[queryLogFile path] error:nil];
+    if([[NSFileManager defaultManager] fileExistsAtPath:[queryLogFile path]]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[queryLogFile path] error:nil];
     }
     
     NSURL *blockedLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/blocked.log"];
-    if([fileManager fileExistsAtPath:[blockedLogFile path]]) {
-        [fileManager removeItemAtPath:[blockedLogFile path] error:nil];
+    if([[NSFileManager defaultManager] fileExistsAtPath:[blockedLogFile path]]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[blockedLogFile path] error:nil];
     }
     
     NSURL *whiteLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/whitelist.log"];
-    if([fileManager fileExistsAtPath:[whiteLogFile path]]) {
-        [fileManager removeItemAtPath:[whiteLogFile path] error:nil];
+    if([[NSFileManager defaultManager] fileExistsAtPath:[whiteLogFile path]]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[whiteLogFile path] error:nil];
     }
     
     __weak typeof(self) weakSelf = self;
     
-    if(![fileManager fileExistsAtPath:[configFile path]]) {
+    if(![[NSFileManager defaultManager] fileExistsAtPath:[configFile path]]) {
         NEPacketTunnelNetworkSettings *networkSettings = [[NEPacketTunnelNetworkSettings alloc] initWithTunnelRemoteAddress: @"127.0.0.1" ];
         
         [self setTunnelNetworkSettings:networkSettings completionHandler:^(NSError * _Nullable error) {
@@ -77,7 +62,7 @@
             }
         }];
     } else {
-        _reach = [Reachability reachabilityForInternetConnection];
+        self.reach = [Reachability reachabilityForInternetConnection];
         
         [[NSNotificationCenter defaultCenter] addObserver:weakSelf selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
         
@@ -85,15 +70,11 @@
                 
         BOOL skipWaitResolvers = NO;
         
-        if (![_reach isReachable] || [_reach isConnectionRequired]) {
+        if (![self.reach isReachable] || [self.reach isConnectionRequired]) {
             skipWaitResolvers = YES;
         }
-        
-        NSMutableArray<NSString *> *args = [@[
-                                              [configFile path]
-                                              ] mutableCopy];
-        
-        _dns = [[DNSCryptThread alloc] initWithArguments:[args copy]];
+                
+        self.dns = [[DNSCryptThread alloc] initWithArgument:[configFile path]];
         
         if (skipWaitResolvers) {
             [self startProxy];
@@ -135,13 +116,13 @@
 
 - (void)startProxy {
     [self logInfo:@"Starting proxy..."];
-    [_dns start];
+    [self.dns start];
     [self logInfo:[NSString stringWithFormat:@"Current reachability is [%@]", [_reach currentReachabilityFlags]]];
 }
 
 - (void)stopTunnelWithReason:(NEProviderStopReason)reason completionHandler:(void (^)(void))completionHandler {
-    [_reach stopNotifier];
-    //[_dns stopApp];
+    [self.reach stopNotifier];
+    [self.dns stopApp];
     completionHandler();
     exit(EXIT_SUCCESS);
 }
@@ -153,9 +134,9 @@
 - (void)wake {
     BOOL ok = YES;
     
-    if (_lastForcedResolversCheck) {
+    if (self.lastForcedResolversCheck) {
         NSDate *curTime = [NSDate date];
-        if ([curTime timeIntervalSinceDate:_lastForcedResolversCheck] < 60.0)
+        if ([curTime timeIntervalSinceDate:self.lastForcedResolversCheck] < 60.0)
             ok = NO;
     }
     
@@ -176,8 +157,8 @@
 }
 
 - (void)refreshServers {
-    [_dns closeIdleConnections];
-    [_dns refreshServersInfo];
+    [self.dns closeIdleConnections];
+    [self.dns refreshServersInfo];
 }
 
 - (void)reactivateTunnel:(BOOL)isInitialize {
@@ -191,11 +172,6 @@
     NSURL *configFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/dnscrypt.toml"];
     
     if(![fileManager fileExistsAtPath:[configFile path]]) {
-        if (@available(iOS 12, *)) {
-        } else if (@available(iOS 10, *)) {
-            [self displayMessage:@"No configuration file found. Please, use the app to relaunch DNSCrypt client." completionHandler:^(BOOL success) {}];
-        }
-        
         NEPacketTunnelNetworkSettings *networkSettings = [[NEPacketTunnelNetworkSettings alloc] initWithTunnelRemoteAddress: @"127.0.0.1" ];
         
         [self setTunnelNetworkSettings:networkSettings completionHandler:^(NSError * _Nullable error) {
@@ -206,7 +182,7 @@
         
         NEPacketTunnelNetworkSettings *networkSettings = [self getNetworkSettings];
         
-        _lastForcedResolversCheck = [NSDate date];
+        self.lastForcedResolversCheck = [NSDate date];
         
         [self setTunnelNetworkSettings:networkSettings completionHandler:^(NSError * _Nullable error) {
             weakSelf.reasserting = NO;
@@ -272,27 +248,27 @@
 }
 
 - (void)logInfo:(NSString *)str {
-    [_dns logInfo:str];
+    [self.dns logInfo:str];
 }
 
 - (void)logNotice:(NSString *)str {
-    [_dns logNotice:str];
+    [self.dns logNotice:str];
 }
 
 - (void)logWarn:(NSString *)str {
-    [_dns logWarn:str];
+    [self.dns logWarn:str];
 }
 
 - (void)logError:(NSString *)str {
-    [_dns logError:str];
+    [self.dns logError:str];
 }
 
 - (void)logCritical:(NSString *)str {
-    [_dns logCritical:str];
+    [self.dns logCritical:str];
 }
 
 - (void)logFatal:(NSString *)str {
-    [_dns logFatal:str];
+    [self.dns logFatal:str];
 }
 
 @end

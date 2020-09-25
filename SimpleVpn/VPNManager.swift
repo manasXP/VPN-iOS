@@ -38,7 +38,10 @@ final class VPNManager: NSObject {
         }
     }
     
-    @objc private func VPNStatusDidChange(_: NSNotification?){
+    @objc private func VPNStatusDidChange(_ notification: NSNotification?) {
+        if notification?.object is NETunnelProviderSession {
+            return
+        }
         statusEvent.notify(status)
     }
     
