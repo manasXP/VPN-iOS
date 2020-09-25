@@ -82,4 +82,4 @@ Provider name: [2.dnscrypt-cert.dnsserver]
 Copy DNS Stamp value (`AQcAAAAAAAAAEjk0LjI0NS4xMDkuMTIwOjQ0MyAu1d7NXpwmsYmLDL9hwrYaLSpbYbOxdHOw_UMrDOhNtRkyLmRuc2NyeXB0LWNlcnQuZG5zc2VydmVy`). This is your server stamp, you can insert it in `DNSConstants.m` or in any `dnscrypt.toml` config file if you need to run `dnscrypt-proxy` on another device or platform.
 
 
-You can check stats for server on `YOUR_IP:9100/stats` (it is Prometheus optimized, but it's readable in browser).
+You can check stats for server on `YOUR_IP:9100/metrics` (it is Prometheus optimized, but it's readable in browser).
