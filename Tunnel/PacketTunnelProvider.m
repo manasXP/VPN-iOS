@@ -1,6 +1,7 @@
 #import "PacketTunnelProvider.h"
 #import "Migrator.h"
 #import "NetTester.h"
+#import "DNSConstants.h"
 
 @implementation PacketTunnelProvider
 
@@ -13,11 +14,11 @@
 }
 
 - (NSUserDefaults *)sharedDefs {
-    return [[NSUserDefaults alloc] initWithSuiteName: @"group.ru.wearemad.vpntest"];
+    return [[NSUserDefaults alloc] initWithSuiteName:appGroup];
 }
 
 - (NSURL *)sharedDir {
-    return [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.ru.wearemad.vpntest"];
+    return [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroup];
 }
 
 - (NSDate *)lastForcedResolversCheck {

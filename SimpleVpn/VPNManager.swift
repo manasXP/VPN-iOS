@@ -66,15 +66,15 @@ final class VPNManager: NSObject {
     }
     
     public func connectIKEv2(onError: @escaping (String)->Void) {
-        KeychainWrapper.standard.set(Constants.vpnPassword, forKey: passwordKey)
+        KeychainWrapper.standard.set(VPNConstants.vpnPassword, forKey: passwordKey)
 
         
         let p = NEVPNProtocolIKEv2()
         
         p.authenticationMethod = NEVPNIKEAuthenticationMethod.none
-        p.serverAddress = Constants.serverAddress
+        p.serverAddress = VPNConstants.serverAddress
         p.disconnectOnSleep = false
-        p.username = Constants.vpnUser
+        p.username = VPNConstants.vpnUser
         p.passwordReference = KeychainWrapper.standard.dataRef(forKey: passwordKey)
         p.deadPeerDetectionRate = .medium
         p.disableMOBIKE = false
@@ -94,8 +94,8 @@ final class VPNManager: NSObject {
         p.ikeSecurityAssociationParameters.lifetimeMinutes = 1440
         
         // two lines bellow may depend of your server configuration
-        p.remoteIdentifier = Constants.serverAddress
-        p.localIdentifier = Constants.vpnUser
+        p.remoteIdentifier = VPNConstants.serverAddress
+        p.localIdentifier = VPNConstants.vpnUser
         loadProfile { _ in
             self.manager.protocolConfiguration = p
             self.manager.isEnabled = true

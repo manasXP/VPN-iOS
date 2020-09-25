@@ -92,7 +92,6 @@ class DNSManager {
             } else {
                 let config = NETunnelProviderProtocol()
                 config.providerConfiguration = ["l": 1]
-                config.providerBundleIdentifier = "ru.wearemad.vpntest.Tunnel"
                 config.serverAddress = "SimpleVpn"
                 config.disconnectOnSleep = false
                 

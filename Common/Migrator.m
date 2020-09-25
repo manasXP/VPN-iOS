@@ -1,5 +1,6 @@
 #import "Migrator.h"
 #import <Dnscryptproxy/Dnscryptproxy.h>
+#import "DNSConstants.h"
 
 @import NetworkExtension;
 
@@ -13,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void) preflightCheck {
     @autoreleasepool {
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSURL *containerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:@"group.ru.wearemad.vpntest"];
+        NSURL *containerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:appGroup];
         
         NSString *dnscryptPath = [[containerURL path] stringByAppendingPathComponent:@"dnscrypt"];
         if(![fileManager fileExistsAtPath:dnscryptPath]) {
@@ -72,9 +73,9 @@ NS_ASSUME_NONNULL_BEGIN
                              "log_files_max_size = 10\n"
                              "log_files_max_age = 7\n"
                              "log_files_max_backups = 1\n"
-                             "server_names = ['vpnwearemadru']"
-                             "[static.'vpnwearemadru']"
-                             "stamp = 'sdns://AQcAAAAAAAAAEjk0LjI0NS4xMDkuMTIwOjQ0MyCrDf9vn_METYECRHUnwQj_T4R1wt1VtGZR2H5il06iVx8yLmRuc2NyeXB0LWNlcnQudnBuLndlYXJlbWFkLnJ1'"
+                             "server_names = ['customserver']"
+                             "[static.'customserver']"
+                             "stamp = 'sdns://%@'"
                              "max_workers = 25\n"
                              "netprobe_timeout = 0\n"
                              "[sources.'public-resolvers']\n"
@@ -84,6 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
                              "format = 'v2'\n"
                              "refresh_delay = 72\n"
                              "prefix = ''\n",
+                             serverStamp,
                              [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/resolvers/public-resolvers.md"]
                              ];
             [str writeToFile:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt.toml"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
@@ -165,9 +167,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void) resetLockPermissions {
     @autoreleasepool {
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSURL *containerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:@"group.ru.wearemad.vpntest"];
+        NSURL *containerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:appGroup];
         
-        NSString *prefsFilePath = [[containerURL path] stringByAppendingPathComponent:[NSString stringWithFormat:@"Library/Preferences/%@.plist", @"group.ru.wearemad.vpntest"]];
+        NSString *prefsFilePath = [[containerURL path] stringByAppendingPathComponent:[NSString stringWithFormat:@"Library/Preferences/%@.plist", appGroup]];
         if ([fileManager fileExistsAtPath:prefsFilePath]) {
             NSMutableDictionary *attr = [[fileManager attributesOfItemAtPath:prefsFilePath error:nil] mutableCopy];
             [attr setObject:NSFileProtectionNone forKey:NSFileProtectionKey];
