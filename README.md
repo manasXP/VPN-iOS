@@ -1,5 +1,5 @@
 # VPN-iOS
-VPN app for redirecting DSN traffic in iOS devices
+VPN app for redirecting DNS traffic in iOS devices
 
 # It's based on SimpleVPN (https://github.com/gordinmitya/SimpleVPN) with some changes:
 
@@ -50,7 +50,7 @@ You can install this .mobileconfig file to any iOS/macOS/Android device (be sure
 
 # DNSSec (DoH, DNSCrypt) Server deployment process
 
-Prerequisites: Ubuntu 18.04 LTS, Docker.
+Prerequisites: Ubuntu 18.04 LTS, Docker. Opened 443, 9100 ports. Based on https://github.com/DNSCrypt/dnscrypt-server-docker
 
 ## Step 1
 
@@ -82,3 +82,4 @@ Provider name: [2.dnscrypt-cert.dnsserver]
 Copy DNS Stamp value (`AQcAAAAAAAAAEjk0LjI0NS4xMDkuMTIwOjQ0MyAu1d7NXpwmsYmLDL9hwrYaLSpbYbOxdHOw_UMrDOhNtRkyLmRuc2NyeXB0LWNlcnQuZG5zc2VydmVy`). This is your server stamp, you can insert it in `DNSConstants.m` or in any `dnscrypt.toml` config file if you need to run `dnscrypt-proxy` on another device or platform.
 
 
+You can check stats for server on `YOUR_IP:9100/stats` (it is Prometheus optimized, but it's readable in browser).
