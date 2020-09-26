@@ -16,151 +16,70 @@ NS_ASSUME_NONNULL_BEGIN
     NSURL *containerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:appGroup];
     
     NSString *dnscryptPath = [[containerURL path] stringByAppendingPathComponent:@"dnscrypt"];
+    NSNumber* octal700 = [NSNumber numberWithUnsignedLong:0700] ;
+    NSDictionary *attributes = @{ NSFilePosixPermissions: octal700 };
     if(![fileManager fileExistsAtPath:dnscryptPath]) {
-        NSNumber* octal700 = [NSNumber numberWithUnsignedLong:0700] ;
-        NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    octal700, NSFilePosixPermissions,
-                                    nil] ;
-        
         [fileManager createDirectoryAtPath:dnscryptPath withIntermediateDirectories:YES attributes:attributes error:NULL];
     }
     
     NSString *logsPath = [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/logs"];
     if(![fileManager fileExistsAtPath:logsPath]) {
-        NSNumber* octal700 = [NSNumber numberWithUnsignedLong:0700] ;
-        NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    octal700, NSFilePosixPermissions,
-                                    nil] ;
-        
         [fileManager createDirectoryAtPath:logsPath withIntermediateDirectories:YES attributes:attributes error:NULL];
     }
     
     NSString *resolversPath = [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/resolvers"];
     if(![fileManager fileExistsAtPath:resolversPath]) {
-        NSNumber* octal700 = [NSNumber numberWithUnsignedLong:0700] ;
-        NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    octal700, NSFilePosixPermissions,
-                                    nil] ;
-        
         [fileManager createDirectoryAtPath:resolversPath withIntermediateDirectories:YES attributes:attributes error:NULL];
     }
     
-    //make default config
-    if(![fileManager fileExistsAtPath:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt.toml"]]) {
-        NSString *str = [NSString stringWithFormat:@"listen_addresses = ['127.0.0.1:53', '[::1]:53']\n"
-                         "ipv4_servers = true\n"
-                         "ipv6_servers = true\n"
-                         "max_clients = 250\n"
-                         "dnscrypt_servers = true\n"
-                         "doh_servers = true\n"
-                         "require_dnssec = false\n"
-                         "require_nolog = false\n"
-                         "require_nofilter = false\n"
-                         "force_tcp = false\n"
-                         "tls_disable_session_tickets = false\n"
-                         "dnscrypt_ephemeral_keys = false\n"
-                         "timeout = 2500\n"
-                         "cert_refresh_delay = 240\n"
-                         "block_ipv6 = false\n"
-                         "cache = true\n"
-                         "cache_size = 256\n"
-                         "cache_min_ttl = 600\n"
-                         "cache_max_ttl = 86400\n"
-                         "cache_neg_ttl = 60\n"
-                         "fallback_resolver = '9.9.9.9:53'\n"
-                         "ignore_system_dns = false\n"
-                         "log_files_max_size = 10\n"
-                         "log_files_max_age = 7\n"
-                         "log_files_max_backups = 1\n"
-                         "max_workers = 25\n"
-                         "netprobe_timeout = 0\n"
-                         "server_names = ['customserver']\n"
-                         "[static]\n"
-                         "[static.'customserver']\n"
-                         "stamp = 'sdns://%@'\n"
-                         "[sources.'public-resolvers']\n"
-                         "url = 'https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md'\n"
-                         "minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'\n"
-                         "cache_file = '%@'\n"
-                         "format = 'v2'\n"
-                         "refresh_delay = 72\n"
-                         "prefix = ''\n",
-                         serverStamp,
-                         [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/resolvers/public-resolvers.md"]
-                         ];
-        [str writeToFile:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt.toml"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
-    } else { //already exists
-        NSString *content = [NSString stringWithContentsOfFile:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt.toml"] encoding:NSUTF8StringEncoding error:nil];
-        BOOL modified = NO;
-        
-        NSString *modifiedString = content;
-        
-        if ([modifiedString rangeOfString:@"max_workers" options:NSRegularExpressionSearch].location == NSNotFound) {
-            modifiedString = [@"max_workers = 25\n" stringByAppendingString:modifiedString];
-            modified = YES;
-        }
-        
-        if ([modifiedString rangeOfString:@"netprobe_timeout" options:NSRegularExpressionSearch].location == NSNotFound) {
-            modifiedString = [@"netprobe_timeout = 0\n" stringByAppendingString:modifiedString];
-            modified = YES;
-        }
-        
-        if ([modifiedString rangeOfString:@"listen_addresses\\s*=\\s*\\[[^\\[\\]]*['\"]\\[::1\\]:53['\"][^\\[\\]]*\\]" options:NSRegularExpressionSearch].location == NSNotFound) {
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(listen_addresses\\s*=\\s*\\[[^\\[\\]]*['\"]127.0.0.1:53['\"])([^\\[\\]]*\\])" options:NSRegularExpressionCaseInsensitive error:nil];
-            modifiedString = [regex stringByReplacingMatchesInString:modifiedString
-                                                             options:0
-                                                               range:NSMakeRange(0, [modifiedString length])
-                                                        withTemplate:@"$1, '[::1]:53'$2"];
-            modified = YES;
-        }
-        
-        if ([modifiedString rangeOfString:@"forwarding_rules\\s*=\\s*false" options:NSRegularExpressionSearch].location != NSNotFound) {
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"forwarding_rules\\s*=\\s*false" options:NSRegularExpressionCaseInsensitive error:nil];
-            modifiedString = [regex stringByReplacingMatchesInString:modifiedString
-                                                             options:0
-                                                               range:NSMakeRange(0, [modifiedString length])
-                                                        withTemplate:@""];
-            modified = YES;
-        }
-        
-        NSRegularExpression *regexPaths = [NSRegularExpression regularExpressionWithPattern:@"\"(/[^\"]+?/dnscrypt)/" options:NSRegularExpressionCaseInsensitive error:nil];
-        
-        NSArray *matches = [regexPaths matchesInString:content options:0 range:NSMakeRange(0, [content length])];
-        NSString *foundPath;
-        
-        for (NSTextCheckingResult *result in matches) {
-            foundPath = [content substringWithRange:[result rangeAtIndex:1]];
-            if(![fileManager fileExistsAtPath:foundPath]) {
-                modifiedString = [modifiedString stringByReplacingOccurrencesOfString:foundPath withString:dnscryptPath];
-                modified = YES;
-            }
-        }
-        
-        
-        if (modified) {
-            [modifiedString writeToFile:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt.toml"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
-        }
-    }
-    
-    if([fileManager fileExistsAtPath:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt-user.toml"]]) {
-        NSString *content = [NSString stringWithContentsOfFile:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt-user.toml"] encoding:NSUTF8StringEncoding error:nil];
-        BOOL modified = NO;
-        
-        NSString *modifiedString = content;
-        
-        if ([modifiedString rangeOfString:@"listen_addresses\\s*=\\s*\\[[^\\[\\]]*['\"]\\[::1\\]:53['\"][^\\[\\]]*\\]" options:NSRegularExpressionSearch].location == NSNotFound) {
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(listen_addresses\\s*=\\s*\\[[^\\[\\]]*['\"]127.0.0.1:53['\"])([^\\[\\]]*\\])" options:NSRegularExpressionCaseInsensitive error:nil];
-            modifiedString = [regex stringByReplacingMatchesInString:modifiedString
-                                                             options:0
-                                                               range:NSMakeRange(0, [modifiedString length])
-                                                        withTemplate:@"$1, '[::1]:53'$2"];
-            modified = YES;
-        }
-        
-        if (modified) {
-            [modifiedString writeToFile:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt-user.toml"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
-        }
-    }
+    //make config
+    NSString *str = [NSString stringWithFormat:@"listen_addresses = [\"127.0.0.1:53\", \"[::1]:53\"]\n"
+                     "ipv4_servers = true\n"
+                     "ipv6_servers = true\n"
+                     "max_clients = 250\n"
+                     "dnscrypt_servers = true\n"
+                     "doh_servers = true\n"
+                     "require_dnssec = false\n"
+                     "require_nolog = false\n"
+                     "require_nofilter = false\n"
+                     "force_tcp = false\n"
+                     "tls_disable_session_tickets = false\n"
+                     "dnscrypt_ephemeral_keys = false\n"
+                     "timeout = 2500\n"
+                     "cert_refresh_delay = 240\n"
+                     "block_ipv6 = false\n"
+                     "cache = true\n"
+                     "cache_size = 256\n"
+                     "cache_min_ttl = 600\n"
+                     "cache_max_ttl = 86400\n"
+                     "cache_neg_ttl = 60\n"
+                     "fallback_resolver = \"9.9.9.9:53\"\n"
+                     "ignore_system_dns = false\n"
+                     "log_files_max_size = 10\n"
+                     "log_files_max_age = 7\n"
+                     "log_files_max_backups = 1\n"
+                     "max_workers = 25\n"
+                     "netprobe_timeout = 0\n"
+                     "server_names = [\"customserver\"]\n"
+                     "[static]\n"
+                     "[static.\"customserver\"]\n"
+                     "stamp = \"sdns://%@\"\n"
+                     "[sources.\"public-resolvers\"]\n"
+                     "url = \"https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md\"\n"
+                     "minisign_key = \"RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3\"\n"
+                     "cache_file = \"%@\"\n"
+                     "format = \"v2\"\n"
+                     "refresh_delay = 72\n"
+                     "prefix = \"\"\n"
+                     "\n"
+                     "[query_log]\n"
+                     "file = \"%@\"\n"
+                     "format = \"tsv\"\n",
+                     serverStamp,
+                     [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/resolvers/public-resolvers.md"],
+                     [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/logs/query.log"]
+                     ];
+    [str writeToFile:[[containerURL path] stringByAppendingPathComponent:@"dnscrypt/dnscrypt.toml"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 + (void) resetLockPermissions {
@@ -168,7 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSURL *containerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:appGroup];
     
     // fix permissions for files
-    NSArray *keys = [NSArray arrayWithObject:NSURLIsDirectoryKey];
+    NSArray *keys = @[NSURLIsDirectoryKey];
     NSURL *mainDir = [containerURL URLByAppendingPathComponent:@"dnscrypt"];
     NSDirectoryEnumerator *enumerator = [fileManager
                                          enumeratorAtURL:mainDir

@@ -16,9 +16,13 @@ class DNSManager {
     
     private var status = NEVPNStatus.disconnected
 
-    func fileExists(at path: String) -> Bool {
-        let fileManager = FileManager.default
-        return fileManager.fileExists(atPath: path)
+    static func queryLogPath() -> String? {
+        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)!
+        let path = url.appendingPathComponent("dnscrypt/logs/query.log").path
+        if FileManager.default.fileExists(atPath: path) {
+            return path
+        }
+        return nil
     }
     
     func startExt(completion: @escaping (Result<AnyObject?, Error>) -> Void) {

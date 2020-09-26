@@ -5,10 +5,6 @@
 
 @implementation PacketTunnelProvider
 
-- (NSUserDefaults *)sharedDefs {
-    return [[NSUserDefaults alloc] initWithSuiteName:appGroup];
-}
-
 - (NSURL *)sharedDir {
     return [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroup];
 }
@@ -19,35 +15,10 @@
 }
 
 - (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler {
-//    [self preflightCheck];
+    [self preflightCheck];
     NSURL *fileManagerURL = [self sharedDir];
     
     NSURL *configFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/dnscrypt.toml"];
-    
-    NSURL *logFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/dns.log"];
-    if([[NSFileManager defaultManager] fileExistsAtPath:[logFile path]]) {
-        [[NSFileManager defaultManager] removeItemAtPath:[logFile path] error:nil];
-    }
-    
-    NSURL *nxLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/nx.log"];
-    if([[NSFileManager defaultManager] fileExistsAtPath:[nxLogFile path]]) {
-        [[NSFileManager defaultManager] removeItemAtPath:[nxLogFile path] error:nil];
-    }
-    
-    NSURL *queryLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/query.log"];
-    if([[NSFileManager defaultManager] fileExistsAtPath:[queryLogFile path]]) {
-        [[NSFileManager defaultManager] removeItemAtPath:[queryLogFile path] error:nil];
-    }
-    
-    NSURL *blockedLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/blocked.log"];
-    if([[NSFileManager defaultManager] fileExistsAtPath:[blockedLogFile path]]) {
-        [[NSFileManager defaultManager] removeItemAtPath:[blockedLogFile path] error:nil];
-    }
-    
-    NSURL *whiteLogFile = [fileManagerURL URLByAppendingPathComponent: @"dnscrypt/logs/whitelist.log"];
-    if([[NSFileManager defaultManager] fileExistsAtPath:[whiteLogFile path]]) {
-        [[NSFileManager defaultManager] removeItemAtPath:[whiteLogFile path] error:nil];
-    }
     
     __weak typeof(self) weakSelf = self;
     

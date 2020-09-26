@@ -35,6 +35,7 @@
 		810B0C64251E0F1A002105AC /* VPNConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CB1CA125151D84009117F2 /* VPNConstants.swift */; };
 		810B0C6B251E10E1002105AC /* DNSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 810B0C6A251E10E1002105AC /* DNSConstants.m */; };
 		810B0C6C251E10E1002105AC /* DNSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 810B0C6A251E10E1002105AC /* DNSConstants.m */; };
+		813B65FB251FB0E0001B7288 /* LogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813B65FA251FB0E0001B7288 /* LogsViewController.swift */; };
 		81CB1CA225151D84009117F2 /* VPNConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CB1CA125151D84009117F2 /* VPNConstants.swift */; };
 /* End PBXBuildFile section */
 
@@ -100,6 +101,7 @@
 		810B0BB3251D4B45002105AC /* OSLog.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSLog.framework; path = System/Library/Frameworks/OSLog.framework; sourceTree = SDKROOT; };
 		810B0C69251E10E1002105AC /* DNSConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DNSConstants.h; sourceTree = "<group>"; };
 		810B0C6A251E10E1002105AC /* DNSConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DNSConstants.m; sourceTree = "<group>"; };
+		813B65FA251FB0E0001B7288 /* LogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsViewController.swift; sourceTree = "<group>"; };
 		81CB1CA125151D84009117F2 /* VPNConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConstants.swift; sourceTree = "<group>"; };
 		CBEEFFCDCFE33D0B506AE768 /* Pods-Tunnel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tunnel.debug.xcconfig"; path = "Target Support Files/Pods-Tunnel/Pods-Tunnel.debug.xcconfig"; sourceTree = "<group>"; };
 		FE5E6A6294B905CD63198A07 /* Pods-Tunnel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tunnel.release.xcconfig"; path = "Target Support Files/Pods-Tunnel/Pods-Tunnel.release.xcconfig"; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				4DC7B5251E0D119300426BEC /* KeychainWrapper.swift */,
 				4DB75F021E0C2CBE00C37E7F /* AppDelegate.swift */,
 				4DB75F041E0C2CBE00C37E7F /* ViewController.swift */,
+				813B65FA251FB0E0001B7288 /* LogsViewController.swift */,
 				4DB75F061E0C2CBE00C37E7F /* Main.storyboard */,
 				4DB75F091E0C2CBE00C37E7F /* Assets.xcassets */,
 				4DB75F0B1E0C2CBE00C37E7F /* LaunchScreen.storyboard */,
@@ -416,6 +419,7 @@
 				8104096B251BA18D00F75D6C /* Migrator.m in Sources */,
 				810B0C6B251E10E1002105AC /* DNSConstants.m in Sources */,
 				4DC7B5261E0D119300426BEC /* KeychainWrapper.swift in Sources */,
+				813B65FB251FB0E0001B7288 /* LogsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
