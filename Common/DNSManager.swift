@@ -25,6 +25,13 @@ class DNSManager {
         return nil
     }
     
+    static func clearQueryLog() {
+        guard let path = queryLogPath() else {
+            return
+        }
+        try? FileManager.default.removeItem(atPath: path)
+    }
+    
     func startExt(completion: @escaping (Result<AnyObject?, Error>) -> Void) {
         NETunnelProviderManager.loadAllFromPreferences() { managers, error in
             if let managers = managers, managers.count > 0 {
@@ -39,7 +46,6 @@ class DNSManager {
                         }
                     } catch let error {
                         print("Error: Could not start manager: \(error)")
-                        self.stopStatusMonitors()
                         completion(.failure(error))
                         return
                     }
@@ -138,18 +144,6 @@ class DNSManager {
                 self?.status = session.status
                 self?.statusEvent.notify(session.status)
             }
-        }
-    }
-    
-    func stopStatusMonitors() {
-        if self.vpnStatusObserver != nil {
-            NotificationCenter.default.removeObserver(self.vpnStatusObserver!)
-            self.vpnStatusObserver = nil
-        }
-        
-        doWithAppVPNManager() { (manager) in
-            NotificationCenter.default.removeObserver(self, name: Notification.Name.NEVPNStatusDidChange, object: manager.connection)
-            self.vpnStatusObserverSet = false
         }
     }
 }

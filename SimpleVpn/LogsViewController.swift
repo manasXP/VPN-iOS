@@ -23,6 +23,7 @@ final class LogsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        textView.text = "No logs..."
         updateLogs()
         
         updateTimer = Timer.scheduledTimer(withTimeInterval: 2,

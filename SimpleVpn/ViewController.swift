@@ -6,6 +6,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var vpnSwitch: UISwitch!
     @IBOutlet weak var dohSwitch: UISwitch!
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var clearLogsButton: UIButton!
 
     private let dnsManager = DNSManager()
     
@@ -62,21 +63,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
             dohSwitch.isOn = false
             dohSwitch.isEnabled = true
             vpnSwitch.isEnabled = true
+            clearLogsButton.isHidden = false
         case .connected:
             statusText = "Connected to DoH"
             dohSwitch.isOn = true
             dohSwitch.isEnabled = true
             vpnSwitch.isEnabled = false
+            clearLogsButton.isHidden = true
         case .connecting:
             statusText = "Connecting to DoH..."
             dohSwitch.isOn = true
             dohSwitch.isEnabled = false
             vpnSwitch.isEnabled = false
+            clearLogsButton.isHidden = true
         case .disconnecting:
             statusText = "Disconnecting from DoH..."
             dohSwitch.isOn = false
             dohSwitch.isEnabled = false
             vpnSwitch.isEnabled = false
+            clearLogsButton.isHidden = true
         @unknown default:
             statusText = "Unknown status"
         }
@@ -93,6 +98,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
         dohSwitch.isEnabled = false
         vpnSwitch.isEnabled = false
         connectDoH()
+    }
+    
+    @IBAction func clearLogsButtonTapped(_ sender: Any) {
+        DNSManager.clearQueryLog()
+    }
+    
+    @IBAction func openTest(_ sender: Any) {
+        UIApplication.shared.open(URL(string: "https://dnsleaktest.com")!, options: [:], completionHandler: nil)
     }
     
     private func connectDoH() {

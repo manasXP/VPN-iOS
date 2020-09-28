@@ -57,25 +57,44 @@
                                     <segue destination="HS4-M9-n6Z" kind="show" id="sKD-9J-3ta"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8D-43-kdv">
+                                <rect key="frame" x="233" y="484" width="39" height="11"/>
+                                <state key="normal" title="Open dnsleaktest.com"/>
+                                <connections>
+                                    <action selector="openTest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RK4-1y-EBm"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cr3-Rs-xs3">
+                                <rect key="frame" x="229" y="508" width="47" height="11"/>
+                                <state key="normal" title="Clear Query Logs"/>
+                                <connections>
+                                    <action selector="clearLogsButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PZL-0q-m94"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="YQi-0t-bys" firstAttribute="top" secondItem="mru-0E-Xin" secondAttribute="bottom" constant="24" id="4a8-4U-QOk"/>
+                            <constraint firstItem="Cr3-Rs-xs3" firstAttribute="top" secondItem="n8D-43-kdv" secondAttribute="bottom" constant="32" id="O4f-7u-Oju"/>
                             <constraint firstItem="iUP-GJ-UB4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="RV3-bi-yq9"/>
                             <constraint firstItem="iUP-GJ-UB4" firstAttribute="top" secondItem="bTZ-Vp-sKz" secondAttribute="bottom" constant="32" id="W9r-L0-p5g"/>
+                            <constraint firstItem="n8D-43-kdv" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YYL-l2-IzK"/>
                             <constraint firstItem="mru-0E-Xin" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="a70-UJ-UXn"/>
                             <constraint firstItem="GIf-gc-Pne" firstAttribute="trailing" secondItem="cy6-Dd-rFD" secondAttribute="trailing" id="cGG-JQ-fgD"/>
                             <constraint firstAttribute="trailing" secondItem="bTZ-Vp-sKz" secondAttribute="trailing" constant="24" id="gfq-vx-ooS"/>
+                            <constraint firstItem="n8D-43-kdv" firstAttribute="top" secondItem="iUP-GJ-UB4" secondAttribute="bottom" constant="32" id="jfy-sZ-Cx1"/>
                             <constraint firstItem="cy6-Dd-rFD" firstAttribute="centerY" secondItem="mru-0E-Xin" secondAttribute="centerY" id="kwq-U3-F6i"/>
                             <constraint firstItem="mru-0E-Xin" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-32" id="nVE-QG-mN7"/>
                             <constraint firstItem="YQi-0t-bys" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rsc-gN-4ql"/>
                             <constraint firstItem="GIf-gc-Pne" firstAttribute="centerY" secondItem="YQi-0t-bys" secondAttribute="centerY" id="sJs-k7-eta"/>
                             <constraint firstItem="bTZ-Vp-sKz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="24" id="tpF-xS-b0U"/>
                             <constraint firstItem="bTZ-Vp-sKz" firstAttribute="top" secondItem="YQi-0t-bys" secondAttribute="bottom" constant="48" id="u8S-W9-MwA"/>
+                            <constraint firstItem="Cr3-Rs-xs3" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vHa-yA-JKt"/>
                             <constraint firstItem="cy6-Dd-rFD" firstAttribute="leading" secondItem="mru-0E-Xin" secondAttribute="trailing" constant="48" id="ztp-TY-yV0"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="clearLogsButton" destination="Cr3-Rs-xs3" id="iqh-6x-HfC"/>
                         <outlet property="dohSwitch" destination="cy6-Dd-rFD" id="SMD-HE-h7A"/>
                         <outlet property="statusLabel" destination="bTZ-Vp-sKz" id="S9T-bM-i66"/>
                         <outlet property="vpnSwitch" destination="GIf-gc-Pne" id="g6F-di-7Mb"/>
