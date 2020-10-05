@@ -83,3 +83,20 @@ Copy DNS Stamp value (`AQcAAAAAAAAAEjk0LjI0NS4xMDkuMTIwOjQ0MyAu1d7NXpwmsYmLDL9hw
 
 
 You can check stats for server on `YOUR_IP:9100/metrics` (it is Prometheus optimized, but it's readable in browser).
+
+
+
+# Build Instructions of DNSCrypto framework
+
+1. Install the latest Xcode developer tools from Apple.
+2. Install Node.js & npm.
+3. Install golang. 1.12+ is required for TLS 1.3 support.
+4. Clone the repository:
+    git clone https://github.com/s-s/dnscloak.git
+5. Pull in the project dependencies:
+    cd dnscloak
+    npm install && npm install --only=dev
+6. Build framework, (re)build www folder for cordova and prepare project for Xcode:
+    npm run build
+
+
