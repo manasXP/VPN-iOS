@@ -86,8 +86,17 @@ You can check stats for server on `YOUR_IP:9100/metrics` (it is Prometheus optim
 
 
 
-# Build Instructions of DNSCrypto framework
+## DNSCloak for iOS
+iOS GUI and wrapper for dnscrypt-proxy 2.
 
+Uses Apache Cordova as app platform & Framework7 as UI.
+
+Available on the App Store.
+
+# Master Branch
+This branch works with Xcode 10.0 and supports iOS 10.0+.
+
+# Build Instructions for Master
 1. Install the latest Xcode developer tools from Apple.
 2. Install Node.js & npm.
 3. Install golang. 1.12+ is required for TLS 1.3 support.
@@ -95,8 +104,9 @@ You can check stats for server on `YOUR_IP:9100/metrics` (it is Prometheus optim
     `git clone https://github.com/s-s/dnscloak.git`
 5. Pull in the project dependencies:
     ```cd dnscloak
-    npm install && npm install --only=dev```
+       npm install && npm install --only=dev```
 6. Build framework, (re)build www folder for cordova and prepare project for Xcode:
     `npm run build`
-
+7. Open platforms/ios/DNSCryptApp.xcworkspace in Xcode.
+    `Build the DNSCryptApp scheme.`
 
