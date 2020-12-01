@@ -280,9 +280,9 @@
 				TargetAttributes = {
 					4DB75EFE1E0C2CBE00C37E7F = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = T9J94Z86FL;
+						DevelopmentTeam = UQAR2422UK;
 						LastSwiftMigration = 1200;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.VPNLite = {
 								enabled = 1;
@@ -291,9 +291,9 @@
 					};
 					8109E8D925176A24001C04F6 = {
 						CreatedOnToolsVersion = 12.0;
-						DevelopmentTeam = T9J94Z86FL;
+						DevelopmentTeam = UQAR2422UK;
 						LastSwiftMigration = 1200;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -587,8 +587,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SimpleVpn/SimpleVpn.entitlements;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = T9J94Z86FL;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UQAR2422UK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -603,9 +604,9 @@
 					"\"TPKeyboardAvoiding\"",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest;
+				PRODUCT_BUNDLE_IDENTIFIER = in.carworx.tunnel2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "VPN Test";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "SimpleVpn-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -620,8 +621,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SimpleVpn/SimpleVpn.entitlements;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = T9J94Z86FL;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UQAR2422UK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -636,9 +638,9 @@
 					"\"TPKeyboardAvoiding\"",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest;
+				PRODUCT_BUNDLE_IDENTIFIER = in.carworx.tunnel2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "VPN Test";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "SimpleVpn-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
@@ -655,8 +657,9 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = Tunnel/Tunnel.entitlements;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = T9J94Z86FL;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UQAR2422UK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -669,9 +672,9 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest.Tunnel;
+				PRODUCT_BUNDLE_IDENTIFIER = in.carworx.tunnel2.Thenunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "VPNTest Tunnel";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tunnel-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -691,8 +694,9 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = Tunnel/Tunnel.entitlements;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = T9J94Z86FL;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UQAR2422UK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -704,9 +708,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = ru.wearemad.vpntest.Tunnel;
+				PRODUCT_BUNDLE_IDENTIFIER = in.carworx.tunnel2.Thenunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "VPNTest Tunnel";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tunnel-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
