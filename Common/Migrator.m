@@ -58,7 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
                      "log_files_max_size = 10\n"
                      "log_files_max_age = 7\n"
                      "log_files_max_backups = 1\n"
-                     "max_workers = 25\n"
+                     "log_level = 2\n"
+                     "log_file = \"%@\"\n"
                      "netprobe_timeout = 0\n"
                      "server_names = [\"customserver\"]\n"
                      "[static]\n"
@@ -75,6 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
                      "[query_log]\n"
                      "file = \"%@\"\n"
                      "format = \"tsv\"\n",
+                     [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/logs/dnscrypt-proxy.log"],
                      serverStamp,
                      [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/resolvers/public-resolvers.md"],
                      [[containerURL path] stringByAppendingPathComponent:@"dnscrypt/logs/query.log"]

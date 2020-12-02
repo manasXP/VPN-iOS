@@ -2,7 +2,7 @@
 //  LogsViewController.swift
 //  SimpleVpn
 //
-//  Created by Maxim MAMEDOV on 26.09.2020.
+//  Created by Manas Pradhan on 26.09.2020.
 //  Copyright © 2020 VPN. All rights reserved.
 //
 
@@ -26,7 +26,7 @@ final class LogsViewController: UIViewController {
         textView.text = "No logs..."
         updateLogs()
         
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 2,
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 5,
                                            repeats: true,
                                            block: { [weak self] _ in
                                             self?.updateLogs()
@@ -39,11 +39,17 @@ final class LogsViewController: UIViewController {
     }
     
     private func updateLogs() {
-        guard let logsPath = DNSManager.queryLogPath(),
-              let log = try? String(contentsOfFile: logsPath) else {
+        guard let applogsPath = DNSManager.appLogPath(),
+              let alog = try? String(contentsOfFile: applogsPath) else {
             return
         }
-        textView.text = log
+        guard let querylogsPath = DNSManager.queryLogPath(),
+              let qlog = try? String(contentsOfFile: querylogsPath) else {
+            return
+        }
+        
+        // Show app log appended with query log
+        textView.text = alog+"\n\n\n\n"+qlog
     }
 
 }

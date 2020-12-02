@@ -25,6 +25,15 @@ class DNSManager {
         return nil
     }
     
+    static func appLogPath() -> String? {
+        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)!
+        let path = url.appendingPathComponent("dnscrypt/logs/dnscrypt-proxy.log").path
+        if FileManager.default.fileExists(atPath: path) {
+            return path
+        }
+        return nil
+    }
+
     static func clearQueryLog() {
         guard let path = queryLogPath() else {
             return
@@ -32,6 +41,13 @@ class DNSManager {
         try? FileManager.default.removeItem(atPath: path)
     }
     
+    static func clearAppLog() {
+        guard let path = appLogPath() else {
+            return
+        }
+        try? FileManager.default.removeItem(atPath: path)
+    }
+
     func startExt(completion: @escaping (Result<AnyObject?, Error>) -> Void) {
         NETunnelProviderManager.loadAllFromPreferences() { managers, error in
             if let managers = managers, managers.count > 0 {
